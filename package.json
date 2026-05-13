@@ -5,15 +5,21 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
+    "ios:simulator": "react-native run-ios --simulator=\"iPhone 17 Pro\"",
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest"
   },
   "dependencies": {
+    "@react-native/new-app-screen": "0.85.3",
+    "@react-navigation/native": "^7.2.4",
+    "@react-navigation/native-stack": "^7.15.0",
+    "crypto-js": "^4.2.0",
     "react": "19.2.3",
     "react-native": "0.85.3",
-    "@react-native/new-app-screen": "0.85.3",
-    "react-native-safe-area-context": "^5.5.2"
+    "react-native-safe-area-context": "^5.5.2",
+    "react-native-screens": "^4.25.0",
+    "react-native-video": "^6.19.2"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -27,6 +33,7 @@
     "@react-native/jest-preset": "0.85.3",
     "@react-native/metro-config": "0.85.3",
     "@react-native/typescript-config": "0.85.3",
+    "@types/crypto-js": "^4.2.2",
     "@types/jest": "^29.5.13",
     "@types/react": "^19.2.0",
     "@types/react-test-renderer": "^19.1.0",

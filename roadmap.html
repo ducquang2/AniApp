@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AniApp · Roadmap</title>
+  <style>
+    :root {
+      --bg: #0e0e10;
+      --panel: #17171c;
+      --border: #26262d;
+      --text: #e8e8ee;
+      --muted: #8a8a96;
+      --done: #4ade80;
+      --pending: #f59e0b;
+      --later: #6b7280;
+      --accent: #a78bfa;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 48px 24px; }
+    h1 { font-size: 32px; margin: 0 0 4px; }
+    .sub { color: var(--muted); margin: 0 0 32px; }
+    .legend { display: flex; gap: 16px; margin: 0 0 24px; font-size: 13px; color: var(--muted); }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .dot.done { background: var(--done); }
+    .dot.pending { background: var(--pending); }
+    .dot.later { background: var(--later); }
+
+    .milestone {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 0 0 16px;
+    }
+    .milestone header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+    .milestone h2 { margin: 0; font-size: 20px; }
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+    .badge.done { background: rgba(74, 222, 128, 0.15); color: var(--done); }
+    .badge.pending { background: rgba(245, 158, 11, 0.15); color: var(--pending); }
+    .badge.later { background: rgba(107, 114, 128, 0.2); color: var(--later); }
+    .milestone p.note { color: var(--muted); margin: 0 0 12px; font-size: 14px; }
+
+    ul.tasks { list-style: none; padding: 0; margin: 0; }
+    ul.tasks li {
+      display: flex;
+      gap: 10px;
+      padding: 6px 0;
+      font-size: 14px;
+    }
+    ul.tasks li::before {
+      content: "";
+      flex: 0 0 16px;
+      height: 16px;
+      margin-top: 3px;
+      border-radius: 4px;
+      background: var(--border);
+    }
+    ul.tasks li.done::before {
+      background: var(--done);
+      content: "✓";
+      color: #052e13;
+      font-size: 12px;
+      font-weight: 800;
+      text-align: center;
+      line-height: 16px;
+    }
+    ul.tasks li.done { color: var(--text); }
+    ul.tasks li.todo { color: var(--muted); }
+
+    footer { margin-top: 32px; color: var(--muted); font-size: 12px; }
+    code { background: #1f1f25; padding: 1px 6px; border-radius: 4px; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>AniApp · Roadmap</h1>
+    <p class="sub">Personal sideloaded anime app built on the <code>ani-cli</code> allanime scraper, ported to React Native + TypeScript.</p>
+
+    <div class="legend">
+      <span><i class="dot done"></i> Done</span>
+      <span><i class="dot pending"></i> Next up</span>
+      <span><i class="dot later"></i> Later</span>
+    </div>
+
+    <section class="milestone">
+      <header>
+        <h2>v1 · Search & Play</h2>
+        <span class="badge done">Done</span>
+      </header>
+      <p class="note">Minimum viable loop: find a show, pick an episode, watch it.</p>
+      <ul class="tasks">
+        <li class="done">Port allanime GraphQL queries (search / episodes / sources) to TypeScript</li>
+        <li class="done">Hex-pair URL decoder for provider source IDs</li>
+        <li class="done">Provider resolution + <code>/clock.json</code> link extraction</li>
+        <li class="done">React Navigation native stack: Search → Episodes → Player</li>
+        <li class="done">HLS playback via <code>react-native-video</code> with Referer header</li>
+      </ul>
+    </section>
+
+    <section class="milestone">
+      <header>
+        <h2>v2 · Sub/Dub + Quality picker</h2>
+        <span class="badge pending">Next up</span>
+      </header>
+      <p class="note">Surface ani-cli's existing knobs: pick translation, pick resolution.</p>
+      <ul class="tasks">
+        <li class="todo">Sub/Dub toggle on Search and Episodes screens (state lifted to a small store)</li>
+        <li class="todo">Parse wixmp multi-resolution URL pattern (<code>,1080p,720p,…,/mp4/</code>) into discrete qualities</li>
+        <li class="todo">Resolve master m3u8 → variant playlists; expose quality list to the player UI</li>
+        <li class="todo">Quality picker overlay in Player (Best / 1080 / 720 / 480 / Worst)</li>
+        <li class="todo">Persist preferred mode + quality in <code>AsyncStorage</code></li>
+      </ul>
+    </section>
+
+    <section class="milestone">
+      <header>
+        <h2>v3 · Continue watching & history</h2>
+        <span class="badge later">Later</span>
+      </header>
+      <p class="note">Local-only tracking — no accounts, no backend.</p>
+      <ul class="tasks">
+        <li class="todo">Persist <code>{showId, episodeString, positionMs, durationMs, watchedAt}</code> per show</li>
+        <li class="todo">"Continue Watching" carousel on the Search screen</li>
+        <li class="todo">Resume playback from saved position; auto-mark watched at 90%</li>
+        <li class="todo">"Next Episode" affordance at end of current episode</li>
+        <li class="todo">Clear-history action in a small Settings screen</li>
+      </ul>
+    </section>
+
+    <footer>
+      Status as of 2026-05-13. Personal use only — allanime sources are unlicensed; this won't ship to the App Store.
+    </footer>
+  </div>
+</body>
+</html>
