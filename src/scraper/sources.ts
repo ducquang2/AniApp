@@ -139,11 +139,11 @@ async function resolveEncodedSource(src: SourceEntry): Promise<PlayableLink | nu
   };
 }
 
-export async function getPlayableLink(
+export async function getPlayableLinks(
   showId: string,
   episodeString: string,
   mode: TranslationType = 'sub',
-): Promise<PlayableLink> {
+): Promise<PlayableLink[]> {
   let sources = await fetchSourcesViaPersistedQuery(showId, episodeString, mode);
   if (!sources || sources.length === 0) {
     sources = await fetchSourcesViaPost(showId, episodeString, mode);
@@ -152,12 +152,19 @@ export async function getPlayableLink(
     throw new Error('Allanime returned no sources (captcha or upstream error)');
   }
 
+  const links: PlayableLink[] = [];
   for (const src of sortByPriority(sources)) {
     const direct = tryDirectLink(src);
-    if (direct) return direct;
+    if (direct) {
+      links.push(direct);
+      continue;
+    }
     const resolved = await resolveEncodedSource(src);
-    if (resolved) return resolved;
+    if (resolved) links.push(resolved);
   }
 
-  throw new Error('No playable source found for this episode');
+  if (links.length === 0) {
+    throw new Error('No playable source found for this episode');
+  }
+  return links;
 }

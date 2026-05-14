@@ -1,6 +1,6 @@
 export { searchAnime } from './search';
 export { listEpisodes } from './episodes';
-export { getPlayableLink } from './sources';
+export { getPlayableLinks } from './sources';
 export type {
   SearchResult,
   EpisodeInfo,
