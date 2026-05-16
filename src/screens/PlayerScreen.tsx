@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  PanResponder,
   Pressable,
   StyleSheet,
   Text,
@@ -10,12 +11,13 @@ import { VLCPlayer } from 'react-native-vlc-media-player';
 import { useIsFocused } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { getPlayableLinks } from '../scraper';
-import type { PlayableLink } from '../scraper';
+import { getPlayableLinks, type PlayableLink } from '../scraper';
 import type { RootStackParamList } from '../navigation';
 
 const USER_AGENT =
   'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1';
+
+const SKIP_MS = 5000;
 
 // VLCPlayer doesn't accept request headers directly — pass via libvlc CLI options.
 function buildInitOptions(referer: string | undefined): string[] {
@@ -37,6 +39,8 @@ function formatMs(ms: number): string {
   return h > 0 ? `${h}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
 }
 
+const clamp01 = (n: number) => Math.max(0, Math.min(1, n));
+
 type Props = NativeStackScreenProps<RootStackParamList, 'Player'>;
 
 export function PlayerScreen({ route, navigation }: Props) {
@@ -46,11 +50,16 @@ export function PlayerScreen({ route, navigation }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [paused, setPaused] = useState(false);
   const [progress, setProgress] = useState({ currentMs: 0, durationMs: 0 });
+  const [scrubFraction, setScrubFraction] = useState<number | null>(null);
   const isFocused = useIsFocused();
   const playerRef = useRef<any>(null);
+  const trackWidthRef = useRef(0);
   const link = links[index] ?? null;
-  const fraction =
-    progress.durationMs > 0 ? progress.currentMs / progress.durationMs : 0;
+
+  // VLC seek takes a 0–1 fraction.
+  const seekToFraction = (f: number) => {
+    playerRef.current?.seek?.(clamp01(f));
+  };
 
   useEffect(() => {
     navigation.setOptions({ title });
@@ -103,6 +112,32 @@ export function PlayerScreen({ route, navigation }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation, links, index]);
 
+  // Drag/tap the seek bar. Reads track width via ref so the closure stays valid.
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: e => {
+        setScrubFraction(
+          clamp01(e.nativeEvent.locationX / (trackWidthRef.current || 1)),
+        );
+      },
+      onPanResponderMove: e => {
+        setScrubFraction(
+          clamp01(e.nativeEvent.locationX / (trackWidthRef.current || 1)),
+        );
+      },
+      onPanResponderRelease: e => {
+        const f = clamp01(
+          e.nativeEvent.locationX / (trackWidthRef.current || 1),
+        );
+        seekToFraction(f);
+        setScrubFraction(null);
+      },
+      onPanResponderTerminate: () => setScrubFraction(null),
+    }),
+  ).current;
+
   if (error) {
     return (
       <View style={styles.center}>
@@ -120,12 +155,22 @@ export function PlayerScreen({ route, navigation }: Props) {
     );
   }
 
+  const liveFraction =
+    progress.durationMs > 0 ? progress.currentMs / progress.durationMs : 0;
+  const displayFraction = scrubFraction ?? liveFraction;
+  const displayCurrentMs =
+    scrubFraction != null
+      ? scrubFraction * progress.durationMs
+      : progress.currentMs;
+
+  const skip = (deltaMs: number) => {
+    if (progress.durationMs <= 0) return;
+    seekToFraction((progress.currentMs + deltaMs) / progress.durationMs);
+  };
+
   return (
     <View style={styles.container}>
-      <Pressable
-        style={styles.videoWrap}
-        onPress={() => setPaused(p => !p)}
-      >
+      <Pressable style={styles.videoWrap} onPress={() => setPaused(p => !p)}>
         <VLCPlayer
           key={link.uri}
           ref={playerRef}
@@ -147,22 +192,53 @@ export function PlayerScreen({ route, navigation }: Props) {
           onError={handlePlaybackError}
         />
       </Pressable>
+
       <View style={styles.controls}>
-        <Pressable
-          onPress={() => setPaused(p => !p)}
-          style={styles.playBtn}
-          hitSlop={8}
+        <View
+          style={styles.seekArea}
+          onLayout={e => {
+            trackWidthRef.current = e.nativeEvent.layout.width;
+          }}
+          {...panResponder.panHandlers}
         >
-          <Text style={styles.playBtnText}>{paused ? '▶' : '❚❚'}</Text>
-        </Pressable>
-        <View style={styles.progressTrack}>
+          <View style={styles.seekLine}>
+            <View
+              style={[styles.seekFill, { width: `${displayFraction * 100}%` }]}
+            />
+          </View>
           <View
-            style={[styles.progressFill, { width: `${fraction * 100}%` }]}
+            style={[styles.seekKnob, { left: `${displayFraction * 100}%` }]}
+            pointerEvents="none"
           />
         </View>
-        <Text style={styles.time}>
-          {formatMs(progress.currentMs)} / {formatMs(progress.durationMs)}
-        </Text>
+
+        <View style={styles.buttonRow}>
+          <Pressable
+            onPress={() => skip(-SKIP_MS)}
+            style={styles.btn}
+            hitSlop={8}
+          >
+            <Text style={styles.btnText}>« 5s</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => setPaused(p => !p)}
+            style={styles.btn}
+            hitSlop={8}
+          >
+            <Text style={styles.playText}>{paused ? '▶' : '❚❚'}</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => skip(SKIP_MS)}
+            style={styles.btn}
+            hitSlop={8}
+          >
+            <Text style={styles.btnText}>5s »</Text>
+          </Pressable>
+          <View style={styles.spacer} />
+          <Text style={styles.time}>
+            {formatMs(displayCurrentMs)} / {formatMs(progress.durationMs)}
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -182,29 +258,31 @@ const styles = StyleSheet.create({
   hint: { color: '#888', marginTop: 8 },
   headerButton: { paddingHorizontal: 8, paddingVertical: 4 },
   headerButtonText: { color: '#4af', fontSize: 14 },
-  controls: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#111',
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-  },
-  playBtn: { width: 36, alignItems: 'center', justifyContent: 'center' },
-  playBtnText: { color: '#fff', fontSize: 18 },
-  progressTrack: {
-    flex: 1,
-    height: 3,
+  controls: { backgroundColor: '#111', paddingHorizontal: 12, paddingBottom: 12 },
+  seekArea: { height: 28, justifyContent: 'center' },
+  seekLine: {
+    height: 4,
     backgroundColor: '#333',
-    marginHorizontal: 12,
     borderRadius: 2,
     overflow: 'hidden',
   },
-  progressFill: { height: '100%', backgroundColor: '#4af' },
+  seekFill: { height: '100%', backgroundColor: '#4af' },
+  seekKnob: {
+    position: 'absolute',
+    width: 14,
+    height: 14,
+    marginLeft: -7,
+    borderRadius: 7,
+    backgroundColor: '#4af',
+  },
+  buttonRow: { flexDirection: 'row', alignItems: 'center' },
+  btn: { paddingHorizontal: 10, paddingVertical: 6 },
+  btnText: { color: '#fff', fontSize: 14 },
+  playText: { color: '#fff', fontSize: 16 },
+  spacer: { flex: 1 },
   time: {
     color: '#ccc',
     fontSize: 12,
     fontVariant: ['tabular-nums'],
-    minWidth: 96,
-    textAlign: 'right',
   },
 });

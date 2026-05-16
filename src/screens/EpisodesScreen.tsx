@@ -7,9 +7,9 @@ import {
   Text,
   View,
 } from 'react-native';
-import { listEpisodes } from '../scraper';
-import type { EpisodeInfo } from '../scraper';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+
+import { listEpisodes, type EpisodeInfo } from '../scraper';
 import type { RootStackParamList } from '../navigation';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Episodes'>;
