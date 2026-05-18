@@ -2,7 +2,7 @@ import type {
   CompositeScreenProps,
   NavigatorScreenParams,
 } from '@react-navigation/native';
-import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { NativeBottomTabScreenProps } from '@bottom-tabs/react-navigation';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 export type MainTabParamList = {
@@ -35,6 +35,6 @@ export type RootStackScreenProps<T extends keyof RootStackParamList> =
 // Tab screens also need to reach Episodes/Player on the parent stack.
 export type TabScreenProps<T extends keyof MainTabParamList> =
   CompositeScreenProps<
-    BottomTabScreenProps<MainTabParamList, T>,
+    NativeBottomTabScreenProps<MainTabParamList, T>,
     NativeStackScreenProps<RootStackParamList>
   >;

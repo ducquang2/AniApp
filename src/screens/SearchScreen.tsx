@@ -8,6 +8,8 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import { useBottomTabBarHeight } from 'react-native-bottom-tabs';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { searchAnime, type SearchResult } from '../scraper';
 import type { TabScreenProps } from '../navigation';
 import { AnimeCard, Button } from '../components';
@@ -31,6 +33,8 @@ export function SearchScreen({ navigation }: Props) {
   const [focused, setFocused] = useState(false);
 
   const { width } = useWindowDimensions();
+  const tabBarHeight = useBottomTabBarHeight();
+  const insets = useSafeAreaInsets();
   const cardWidth = (width - spacing.gutter * 3) / 2;
 
   const onSubmit = async () => {
@@ -51,7 +55,7 @@ export function SearchScreen({ navigation }: Props) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
       <TextInput
         style={[styles.input, focused && styles.inputFocused]}
         placeholder="Search anime…"
@@ -89,7 +93,10 @@ export function SearchScreen({ navigation }: Props) {
         keyExtractor={item => item.id}
         numColumns={2}
         columnWrapperStyle={styles.column}
-        contentContainerStyle={styles.list}
+        contentContainerStyle={[
+          styles.list,
+          { paddingBottom: tabBarHeight + spacing.gutter },
+        ]}
         renderItem={({ item }) => (
           <AnimeCard
             title={item.name}

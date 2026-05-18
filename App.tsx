@@ -1,6 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeBottomTabNavigator } from '@bottom-tabs/react-navigation';
 import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -10,53 +10,58 @@ import { SearchScreen } from './src/screens/SearchScreen';
 import { LibraryScreen } from './src/screens/LibraryScreen';
 import { EpisodesScreen } from './src/screens/EpisodesScreen';
 import { PlayerScreen } from './src/screens/PlayerScreen';
-import { Icon, type IconName } from './src/components';
 import { colors, typography } from './src/theme';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-const Tab = createBottomTabNavigator<MainTabParamList>();
-
-const headerTitleStyle = {
-  color: colors.onSurface,
-  fontFamily: typography.headlineMd.fontFamily,
-};
+const Tab = createNativeBottomTabNavigator<MainTabParamList>();
 
 const stackScreenOptions = {
   headerStyle: { backgroundColor: colors.surfaceContainerLowest },
   headerTintColor: colors.primary,
-  headerTitleStyle,
+  headerTitleStyle: {
+    color: colors.onSurface,
+    fontFamily: typography.headlineMd.fontFamily,
+  },
   contentStyle: { backgroundColor: colors.background },
 } as const;
 
-const TAB_ICON: Record<keyof MainTabParamList, IconName> = {
-  Home: 'home',
-  Search: 'search',
-  Library: 'bookmark',
-};
-
+// Native UITabBarController — on iOS 26 it picks up Liquid Glass and the
+// scroll-driven minimize animation automatically. Icons are SF Symbols.
 function MainTabs() {
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
-        headerStyle: { backgroundColor: colors.surfaceContainerLowest },
-        headerTitleStyle,
-        tabBarStyle: {
-          backgroundColor: colors.surfaceContainerLowest,
-          borderTopColor: colors.outlineVariant,
-        },
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.onSurfaceVariant,
-        tabBarIcon: ({ color, size }) => (
-          <Icon name={TAB_ICON[route.name]} color={color} size={size} />
-        ),
-      })}>
+      minimizeBehavior="onScrollDown"
+      translucent
+      tabBarActiveTintColor={colors.primary}
+      tabBarInactiveTintColor={colors.onSurfaceVariant}>
       <Tab.Screen
         name="Home"
         component={HomeScreen}
-        options={{ headerShown: false }}
+        options={{
+          title: 'Home',
+          tabBarIcon: ({ focused }) => ({
+            sfSymbol: focused ? 'house.fill' : 'house',
+          }),
+        }}
       />
-      <Tab.Screen name="Search" component={SearchScreen} />
-      <Tab.Screen name="Library" component={LibraryScreen} />
+      <Tab.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{
+          title: 'Search',
+          tabBarIcon: () => ({ sfSymbol: 'magnifyingglass' }),
+        }}
+      />
+      <Tab.Screen
+        name="Library"
+        component={LibraryScreen}
+        options={{
+          title: 'Library',
+          tabBarIcon: ({ focused }) => ({
+            sfSymbol: focused ? 'bookmark.fill' : 'bookmark',
+          }),
+        }}
+      />
     </Tab.Navigator>
   );
 }

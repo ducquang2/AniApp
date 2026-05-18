@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { useBottomTabBarHeight } from 'react-native-bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -44,6 +45,7 @@ function formatClock(ms: number): string {
 export function HomeScreen({ navigation }: Props) {
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
+  const tabBarHeight = useBottomTabBarHeight();
 
   const [hero, setHero] = useState<ShowDetail | null>(null);
   const [heroBase, setHeroBase] = useState<SearchResult | null>(null);
@@ -283,7 +285,10 @@ export function HomeScreen({ navigation }: Props) {
       numColumns={2}
       ListHeaderComponent={header}
       columnWrapperStyle={styles.gridRow}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[
+        styles.content,
+        { paddingBottom: tabBarHeight + spacing.stackLg },
+      ]}
       renderItem={({ item }) => (
         <AnimeCard
           title={item.name}

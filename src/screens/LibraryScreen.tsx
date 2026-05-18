@@ -7,6 +7,8 @@ import {
   View,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { useBottomTabBarHeight } from 'react-native-bottom-tabs';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { getWatchlist, type WatchlistEntry } from '../storage';
 import type { TabScreenProps } from '../navigation';
@@ -19,6 +21,8 @@ const GRID_GUTTER = spacing.gutter;
 
 export function LibraryScreen({ navigation }: Props) {
   const { width } = useWindowDimensions();
+  const tabBarHeight = useBottomTabBarHeight();
+  const insets = useSafeAreaInsets();
   const cardWidth = (width - GRID_GUTTER * 3) / 2;
   const [items, setItems] = useState<WatchlistEntry[] | null>(null);
 
@@ -47,7 +51,14 @@ export function LibraryScreen({ navigation }: Props) {
       keyExtractor={item => item.showId}
       numColumns={2}
       columnWrapperStyle={styles.gridRow}
-      contentContainerStyle={styles.content}
+      ListHeaderComponent={<Text style={styles.screenTitle}>Library</Text>}
+      contentContainerStyle={[
+        styles.content,
+        {
+          paddingTop: insets.top + spacing.base,
+          paddingBottom: tabBarHeight + spacing.gutter,
+        },
+      ]}
       renderItem={({ item }) => (
         <AnimeCard
           title={item.name}
@@ -77,6 +88,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   gridCard: { marginBottom: spacing.gutter },
+  screenTitle: {
+    ...typography.headlineMd,
+    color: colors.onSurface,
+    marginLeft: spacing.gutter,
+    marginBottom: spacing.stackMd,
+  },
   empty: {
     flex: 1,
     backgroundColor: colors.background,
