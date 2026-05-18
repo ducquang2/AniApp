@@ -2,12 +2,24 @@
   "migIndex": 1,
   "data": [
     {
-      "path": "src/assets/fonts/InterVariable-Italic.ttf",
-      "sha1": "4a47ee73a08eb33ef92d76853266cf80d860533a"
+      "path": "src/assets/fonts/Inter18pt-Regular.ttf",
+      "sha1": "bd1976c1f019853ab6143ef1246e25aa66fd990e"
     },
     {
-      "path": "src/assets/fonts/InterVariable.ttf",
-      "sha1": "41941415a6de8f3dc776822ccfa02951615d435b"
+      "path": "src/assets/fonts/Inter18pt-SemiBold.ttf",
+      "sha1": "f3e44abd6661d5b861e66db22f4f79a6c466cd00"
+    },
+    {
+      "path": "src/assets/fonts/Montserrat-Bold.ttf",
+      "sha1": "be7c1438070ab637e11716915e4e50903726dcc8"
+    },
+    {
+      "path": "src/assets/fonts/Montserrat-ExtraBold.ttf",
+      "sha1": "84f16776e2099d3b57d8ed239b76e6fa3284b2e7"
+    },
+    {
+      "path": "src/assets/fonts/Untitled.ttf",
+      "sha1": "ad539ff8cbef86e78e21e78e72a02ed947eea3ca"
     }
   ]
 }

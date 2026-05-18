@@ -9,11 +9,14 @@
 /* Begin PBXBuildFile section */
 		0C80B921A6F3F58F76C31292 /* libPods-AniApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-AniApp.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		3FFDED7928E5424684293143 /* Inter18pt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 99A07B2B285544A29B0AEAF6 /* Inter18pt-Regular.ttf */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		96890FC647334907BA26556D /* Inter18pt-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5B3616DB41534AF98283216D /* Inter18pt-SemiBold.ttf */; };
 		B801EC40D650DE5ABA86BDC8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
-		1B134854B70843E8A1E6F9AF /* InterVariable-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E8A3590E6801460383405BDB /* InterVariable-Italic.ttf */; };
-		0B86675A5D9D4B24BF37C005 /* InterVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4B0A7F2D73DE4D4D85AEF5B5 /* InterVariable.ttf */; };
+		C065C9DD99EC4243B3327D21 /* Untitled.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AC9E4AECB54B4D6F821D2BDA /* Untitled.ttf */; };
+		CE25DF0B72144C52BB7701A9 /* Montserrat-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ED979E53CA87485BA261702C /* Montserrat-ExtraBold.ttf */; };
+		D2ECAC8C255F4B6EABCAF30C /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 30D8A35A96B248BDB561C2A4 /* Montserrat-Bold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,14 +24,17 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = AniApp/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = AniApp/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = AniApp/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		30D8A35A96B248BDB561C2A4 /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Bold.ttf"; path = "../src/assets/fonts/Montserrat-Bold.ttf"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-AniApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniApp.debug.xcconfig"; path = "Target Support Files/Pods-AniApp/Pods-AniApp.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-AniApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniApp.release.xcconfig"; path = "Target Support Files/Pods-AniApp/Pods-AniApp.release.xcconfig"; sourceTree = "<group>"; };
+		5B3616DB41534AF98283216D /* Inter18pt-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter18pt-SemiBold.ttf"; path = "../src/assets/fonts/Inter18pt-SemiBold.ttf"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-AniApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AniApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = AniApp/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = AniApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		99A07B2B285544A29B0AEAF6 /* Inter18pt-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter18pt-Regular.ttf"; path = "../src/assets/fonts/Inter18pt-Regular.ttf"; sourceTree = "<group>"; };
+		AC9E4AECB54B4D6F821D2BDA /* Untitled.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Untitled.ttf; path = ../src/assets/fonts/Untitled.ttf; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		E8A3590E6801460383405BDB /* InterVariable-Italic.ttf */ = {isa = PBXFileReference; name = "InterVariable-Italic.ttf"; path = "../src/assets/fonts/InterVariable-Italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		4B0A7F2D73DE4D4D85AEF5B5 /* InterVariable.ttf */ = {isa = PBXFileReference; name = "InterVariable.ttf"; path = "../src/assets/fonts/InterVariable.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		ED979E53CA87485BA261702C /* Montserrat-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-ExtraBold.ttf"; path = "../src/assets/fonts/Montserrat-ExtraBold.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +68,18 @@
 				5DCACB8F33CDC322A6C60F78 /* libPods-AniApp.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4CBF5E710CB647479DA560D0 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5B3616DB41534AF98283216D /* Inter18pt-SemiBold.ttf */,
+				30D8A35A96B248BDB561C2A4 /* Montserrat-Bold.ttf */,
+				99A07B2B285544A29B0AEAF6 /* Inter18pt-Regular.ttf */,
+				ED979E53CA87485BA261702C /* Montserrat-ExtraBold.ttf */,
+				AC9E4AECB54B4D6F821D2BDA /* Untitled.ttf */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -102,16 +120,6 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
-		};
-		4CBF5E710CB647479DA560D0 /* Resources */ = {
-			isa = "PBXGroup";
-			children = (
-				E8A3590E6801460383405BDB /* InterVariable-Italic.ttf */,
-				4B0A7F2D73DE4D4D85AEF5B5 /* InterVariable.ttf */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-			path = "";
 		};
 /* End PBXGroup section */
 
@@ -176,8 +184,11 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				B801EC40D650DE5ABA86BDC8 /* PrivacyInfo.xcprivacy in Resources */,
-				1B134854B70843E8A1E6F9AF /* InterVariable-Italic.ttf in Resources */,
-				0B86675A5D9D4B24BF37C005 /* InterVariable.ttf in Resources */,
+				96890FC647334907BA26556D /* Inter18pt-SemiBold.ttf in Resources */,
+				D2ECAC8C255F4B6EABCAF30C /* Montserrat-Bold.ttf in Resources */,
+				3FFDED7928E5424684293143 /* Inter18pt-Regular.ttf in Resources */,
+				CE25DF0B72144C52BB7701A9 /* Montserrat-ExtraBold.ttf in Resources */,
+				C065C9DD99EC4243B3327D21 /* Untitled.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
