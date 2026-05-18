@@ -1368,6 +1368,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@react-native-community/blur@^4.4.1":
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/@react-native-community/blur/-/blur-4.4.1.tgz#72cbc0be5a84022c33091683ec6888925ebcca6e"
+  integrity sha512-XBSsRiYxE/MOEln2ayunShfJtWztHwUxLFcSL20o+HNNRnuUDv+GXkF6FmM2zE8ZUfrnhQ/zeTqvnuDPGw6O8A==
+
 "@react-native-community/cli-clean@20.1.0":
   version "20.1.0"
   resolved "https://registry.yarnpkg.com/@react-native-community/cli-clean/-/cli-clean-20.1.0.tgz#c60a8f909c4269cabb785b47e43af4f8cd3fef3b"
@@ -5478,6 +5483,11 @@ react-is@^19.1.0, react-is@^19.2.3:
   version "19.2.6"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-19.2.6.tgz#aeee6159b159eb7f520d672cffcc69e7052d288f"
   integrity sha512-XjBR15BhXuylgWGuslhDKqlSayuqvqBX91BP8pauG8kd1zY8kotkNWbXksTCNRarse4kuGbe2kIY05ARtwNIvw==
+
+react-native-linear-gradient@^2.8.3:
+  version "2.8.3"
+  resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.8.3.tgz#9a116649f86d74747304ee13db325e20b21e564f"
+  integrity sha512-KflAXZcEg54PXkLyflaSZQ3PJp4uC4whM7nT/Uot9m0e/qxFV3p6uor1983D1YOBJbJN7rrWdqIjq0T42jOJyA==
 
 react-native-safe-area-context@^5.5.2:
   version "5.7.0"
