@@ -1,97 +1,88 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# AniApp
 
-# Getting Started
+A personal anime-watching app for iOS — React Native + TypeScript, built on the
+[`ani-cli`](https://github.com/pystardust/ani-cli) allanime scraper ported to TypeScript.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+> **Personal use only.** AniApp streams from allanime, an unlicensed source. It is
+> sideloaded for personal use and is **not** distributed on the App Store.
 
-## Step 1: Start Metro
+## Features
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+- **Home** — a cinematic hero (top trending show), a Trending grid, and a Recently
+  Updated carousel
+- **Search** — search the allanime catalogue
+- **Anime info screen** — banner, synopsis, genres, rating, and the full episode grid
+- **Player** — VLC-based playback (broad codec support) with custom controls: skip
+  ±5s, pause, a draggable seek bar, and a source switcher
+- **Continue Watching** — local watch history; resumes each episode at the saved spot
+- **Library** — save shows to a personal watchlist
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+## Tech stack
 
-```sh
-# Using npm
-npm start
+- React Native 0.85 · React 19 · TypeScript — New Architecture enabled
+- React Navigation — native-stack + bottom-tabs
+- `react-native-vlc-media-player` — video playback
+- `@react-native-async-storage/async-storage` — watch history & watchlist
+- `react-native-linear-gradient`, `@react-native-community/blur` — UI
+- `crypto-js` — provider source-ID decoding
 
-# OR using Yarn
-yarn start
+## Project structure
+
+```
+src/
+├── scraper/      allanime GraphQL client — search, episodes, sources, discovery
+├── screens/      Home · Search · Episodes (anime info) · Player · Library
+├── components/   AnimeCard · Button · ContinueCard · GenreChip · Icon · ProgressBar
+├── storage/      AsyncStorage layer — watch history + watchlist
+├── theme/        "Cinematic Pulse" design tokens (see DESIGN.md)
+└── navigation.ts route param types
 ```
 
-## Step 2: Build and run your app
+Fonts (Inter, Montserrat) and the IcoMoon icon font live in `src/assets/` and are
+linked natively via `react-native-asset`.
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+## Getting started
 
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+**Prerequisites:** Node ≥ 22.11, Xcode, Ruby + Bundler, CocoaPods.
 
 ```sh
-bundle install
+yarn install                       # JS dependencies
+bundle install                     # CocoaPods (first time only)
+bundle exec pod install --project-directory=ios
 ```
 
-Then, and every time you update your native dependencies, run:
+### Run in development
 
 ```sh
-bundle exec pod install
+yarn start                         # Metro
+yarn ios                           # build + run on a connected device/simulator
+yarn ios:simulator                 # force the iPhone 17 Pro simulator
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+### Run a release build (sideload to a device)
 
 ```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
+yarn ios:release                   # Release build, installed to the configured device
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+A release build embeds the JS bundle and runs standalone — no Metro needed.
+First, set a signing **Team** on the `AniApp` target in `ios/AniApp.xcworkspace`.
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+> Signing expiry: a free Apple ID profile lasts **7 days** (rebuild weekly); a paid
+> Apple Developer account lasts **1 year**. `yarn ios:release` targets a specific
+> device UDID — update it in `package.json` if you switch phones.
 
-## Step 3: Modify your app
+## Notes & known issues
 
-Now that you have successfully run the app, let's make changes!
+- **iOS-first.** Android wiring exists but is untested.
+- **Player teardown.** `react-native-vlc-media-player` can hang if its native view
+  is destroyed alongside the screen; the Player unmounts the VLC view on blur to
+  avoid this.
+- **`fastSearch` is unused** — that allanime endpoint is broken upstream, so search
+  uses the standard `shows` query.
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+## Related docs
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+- `DESIGN.md` — the "Cinematic Pulse" design system
+- `roadmap.html` — milestones and progress
+- `api-reference.html` — allanime GraphQL API reference
