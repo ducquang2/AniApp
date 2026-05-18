@@ -12,7 +12,9 @@ import { useIsFocused } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { getPlayableLinks, type PlayableLink } from '../scraper';
+import { recordProgress } from '../storage';
 import type { RootStackParamList } from '../navigation';
+import { Icon } from '../components';
 
 const USER_AGENT =
   'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1';
@@ -44,7 +46,8 @@ const clamp01 = (n: number) => Math.max(0, Math.min(1, n));
 type Props = NativeStackScreenProps<RootStackParamList, 'Player'>;
 
 export function PlayerScreen({ route, navigation }: Props) {
-  const { showId, episodeString, title } = route.params;
+  const { showId, episodeString, title, showName, posterUrl, resumeFraction } =
+    route.params;
   const [links, setLinks] = useState<PlayableLink[]>([]);
   const [index, setIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -54,6 +57,8 @@ export function PlayerScreen({ route, navigation }: Props) {
   const isFocused = useIsFocused();
   const playerRef = useRef<any>(null);
   const trackWidthRef = useRef(0);
+  const progressRef = useRef({ currentMs: 0, durationMs: 0 });
+  const resumedRef = useRef(false);
   const link = links[index] ?? null;
 
   // VLC seek takes a 0–1 fraction.
@@ -73,15 +78,29 @@ export function PlayerScreen({ route, navigation }: Props) {
     })();
   }, [showId, episodeString, title, navigation]);
 
-  // Stop the libVLC player explicitly on unmount so audio doesn't outlive the screen.
+  // Keep the latest progress in a ref so the unmount handler sees current values.
+  useEffect(() => {
+    progressRef.current = progress;
+  }, [progress]);
+
+  // Save watch progress on unmount so the episode shows under Continue Watching.
+  // The VLC view itself is unmounted earlier, on blur (see the isFocused guard
+  // in render) — tearing it down together with the screen can hang the app.
   useEffect(() => {
     return () => {
-      try {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        playerRef.current?.stopPlayer?.();
-      } catch {}
+      const { currentMs, durationMs } = progressRef.current;
+      if (durationMs > 0 && currentMs > 0) {
+        recordProgress({
+          showId,
+          name: showName,
+          thumbnail: posterUrl,
+          episodeString,
+          positionMs: currentMs,
+          durationMs,
+        });
+      }
     };
-  }, []);
+  }, [showId, episodeString, showName, posterUrl]);
 
   const handlePlaybackError = (e: unknown) => {
     if (index + 1 < links.length) {
@@ -171,26 +190,38 @@ export function PlayerScreen({ route, navigation }: Props) {
   return (
     <View style={styles.container}>
       <Pressable style={styles.videoWrap} onPress={() => setPaused(p => !p)}>
-        <VLCPlayer
-          key={link.uri}
-          ref={playerRef}
-          source={{
-            uri: link.uri,
-            initType: 2,
-            initOptions: buildInitOptions(link.referer),
-          }}
-          style={styles.video}
-          paused={paused || !isFocused}
-          autoplay
-          resizeMode="contain"
-          onProgress={e =>
-            setProgress({
-              currentMs: e.currentTime ?? 0,
-              durationMs: e.duration ?? 0,
-            })
-          }
-          onError={handlePlaybackError}
-        />
+        {/* Drop the VLC view the moment the screen blurs — tearing it down
+            in the same frame as the screen intermittently hangs the app. */}
+        {isFocused ? (
+          <VLCPlayer
+            key={link.uri}
+            ref={playerRef}
+            source={{
+              uri: link.uri,
+              initType: 2,
+              initOptions: buildInitOptions(link.referer),
+            }}
+            style={styles.video}
+            paused={paused}
+            autoplay
+            resizeMode="contain"
+            onProgress={e => {
+              const durationMs = e.duration ?? 0;
+              setProgress({ currentMs: e.currentTime ?? 0, durationMs });
+              // Jump to the saved spot once, when the duration first arrives.
+              if (
+                !resumedRef.current &&
+                resumeFraction != null &&
+                resumeFraction > 0 &&
+                durationMs > 0
+              ) {
+                resumedRef.current = true;
+                seekToFraction(resumeFraction);
+              }
+            }}
+            onError={handlePlaybackError}
+          />
+        ) : null}
       </Pressable>
 
       <View style={styles.controls}>
@@ -218,21 +249,23 @@ export function PlayerScreen({ route, navigation }: Props) {
             style={styles.btn}
             hitSlop={8}
           >
-            <Text style={styles.btnText}>« 5s</Text>
+            <Icon name="backward" size={15} color="#fff" />
+            <Text style={styles.btnText}>5s</Text>
           </Pressable>
           <Pressable
             onPress={() => setPaused(p => !p)}
             style={styles.btn}
             hitSlop={8}
           >
-            <Text style={styles.playText}>{paused ? '▶' : '❚❚'}</Text>
+            <Icon name={paused ? 'play' : 'pause'} size={22} color="#fff" />
           </Pressable>
           <Pressable
             onPress={() => skip(SKIP_MS)}
             style={styles.btn}
             hitSlop={8}
           >
-            <Text style={styles.btnText}>5s »</Text>
+            <Text style={styles.btnText}>5s</Text>
+            <Icon name="forward" size={15} color="#fff" />
           </Pressable>
           <View style={styles.spacer} />
           <Text style={styles.time}>
@@ -276,9 +309,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#4af',
   },
   buttonRow: { flexDirection: 'row', alignItems: 'center' },
-  btn: { paddingHorizontal: 10, paddingVertical: 6 },
-  btnText: { color: '#fff', fontSize: 14 },
-  playText: { color: '#fff', fontSize: 16 },
+  btn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+  btnText: { color: '#fff', fontSize: 14, marginHorizontal: 3 },
   spacer: { flex: 1 },
   time: {
     color: '#ccc',

@@ -8,14 +8,12 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-
 import { searchAnime, type SearchResult } from '../scraper';
-import type { RootStackParamList } from '../navigation';
+import type { TabScreenProps } from '../navigation';
 import { AnimeCard, Button } from '../components';
 import { colors, radii, spacing, typography } from '../theme';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Search'>;
+type Props = TabScreenProps<'Search'>;
 
 function episodeLabel(item: SearchResult): string {
   const { sub, dub } = item.availableEpisodes;
@@ -104,6 +102,7 @@ export function SearchScreen({ navigation }: Props) {
                 showId: item.id,
                 title: item.name,
                 subCount: item.availableEpisodes.sub,
+                posterUrl: item.thumbnail,
               })
             }
           />
