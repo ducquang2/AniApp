@@ -7,16 +7,19 @@ import {
 } from 'react-native';
 
 import { colors, radii, spacing, typography } from '../theme';
+import { Icon, type IconName } from './Icon';
 
 type Props = {
   title: string;
   onPress?: () => void;
   disabled?: boolean;
+  icon?: IconName;
+  iconSize?: number;
   style?: StyleProp<ViewStyle>;
 };
 
 // Primary action button — solid Electric Orange, bold text, orange glow.
-export function Button({ title, onPress, disabled, style }: Props) {
+export function Button({ title, onPress, disabled, icon, iconSize = 18, style }: Props) {
   return (
     <Pressable
       onPress={onPress}
@@ -29,6 +32,9 @@ export function Button({ title, onPress, disabled, style }: Props) {
         style,
       ]}
     >
+      {icon ? (
+        <Icon name={icon} size={iconSize} color="#ffffff" style={styles.icon} />
+      ) : null}
       <Text style={styles.label}>{title}</Text>
     </Pressable>
   );
@@ -36,6 +42,7 @@ export function Button({ title, onPress, disabled, style }: Props) {
 
 const styles = StyleSheet.create({
   btn: {
+    flexDirection: 'row',
     backgroundColor: colors.primaryContainer,
     borderRadius: radii.base,
     paddingVertical: spacing.stackMd,
@@ -50,6 +57,7 @@ const styles = StyleSheet.create({
   },
   pressed: { opacity: 0.85 },
   disabled: { opacity: 0.4 },
+  icon: { marginRight: spacing.stackSm },
   label: {
     ...typography.headlineMd,
     fontSize: 16,

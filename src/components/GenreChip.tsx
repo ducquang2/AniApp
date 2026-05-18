@@ -1,4 +1,11 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 import { BlurView } from '@react-native-community/blur';
 
 import { colors, glass, radii, spacing, typography } from '../theme';
@@ -7,16 +14,17 @@ type Props = {
   label: string;
   selected?: boolean;
   onPress?: () => void;
+  style?: StyleProp<ViewStyle>;
 };
 
 // Glass chip for genres — translucent blur when idle, solid Orange when selected.
-export function GenreChip({ label, selected, onPress }: Props) {
+export function GenreChip({ label, selected, onPress, style }: Props) {
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
       accessibilityState={{ selected: !!selected }}
-      style={styles.wrap}
+      style={[styles.wrap, style]}
     >
       {selected ? (
         <View style={[styles.chip, styles.chipSelected]}>
