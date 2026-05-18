@@ -12,6 +12,16 @@ export type EpisodeInfo = {
   episodeNumber: number;
 };
 
+export type ShowDetail = {
+  id: string;
+  name: string;
+  thumbnail?: string;
+  banner?: string;
+  score?: number;
+  genres: string[];
+  description: string;
+};
+
 export type SourceEntry = {
   sourceUrl: string;
   sourceName: string;

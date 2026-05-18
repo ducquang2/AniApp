@@ -14,7 +14,9 @@ type RawSearchResponse = {
 };
 
 // Thumbnails arrive as full URLs or as bare filenames on the allanime image host.
-function resolveThumbnail(raw: string | null | undefined): string | undefined {
+export function resolveThumbnail(
+  raw: string | null | undefined,
+): string | undefined {
   if (!raw) return undefined;
   if (raw.startsWith('http')) return raw;
   return `${ALLANIME_IMG_HOST}/${raw.replace(/^\//, '')}`;

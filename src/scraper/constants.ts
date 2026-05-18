@@ -12,8 +12,17 @@ export const SEARCH_GQL =
 export const ALLANIME_IMG_HOST =
   'https://wp.youtube-anime.com/aln.youtube-anime.com';
 
+export const POPULAR_GQL =
+  'query( $type: VaildPopularTypeEnumType! $size: Int! $dateRange: Int $page: Int ) { queryPopular( type: $type size: $size dateRange: $dateRange page: $page ) { recommendations { anyCard { _id name thumbnail availableEpisodes __typename } } }}';
+
+export const LATEST_GQL =
+  'query( $search: queryPageInput! ) { queryLatestPageStatus( pageSearch: $search ) { recommendations { anyCard { _id name thumbnail availableEpisodes __typename } } }}';
+
 export const EPISODES_LIST_GQL =
   'query ($showId: String!) { show( _id: $showId ) { _id availableEpisodesDetail }}';
+
+export const SHOW_DETAIL_GQL =
+  'query ($showId: String!) { show( _id: $showId ) { _id name englishName thumbnail banner score genres description }}';
 
 export const EPISODE_EMBED_GQL =
   'query ($showId: String!, $translationType: VaildTranslationTypeEnumType!, $episodeString: String!) { episode( showId: $showId translationType: $translationType episodeString: $episodeString ) { episodeString sourceUrls }}';
