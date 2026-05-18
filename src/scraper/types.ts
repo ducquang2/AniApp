@@ -3,6 +3,7 @@ export type TranslationType = 'sub' | 'dub';
 export type SearchResult = {
   id: string;
   name: string;
+  thumbnail?: string;
   availableEpisodes: { sub: number; dub: number; raw: number };
 };
 

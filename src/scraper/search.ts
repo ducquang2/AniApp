@@ -1,5 +1,5 @@
 import { gqlPost } from './api';
-import { SEARCH_GQL } from './constants';
+import { ALLANIME_IMG_HOST, SEARCH_GQL } from './constants';
 import type { SearchResult, TranslationType } from './types';
 
 type RawSearchResponse = {
@@ -7,10 +7,18 @@ type RawSearchResponse = {
     edges: Array<{
       _id: string;
       name: string;
+      thumbnail?: string | null;
       availableEpisodes: { sub: number; dub: number; raw: number };
     }>;
   };
 };
+
+// Thumbnails arrive as full URLs or as bare filenames on the allanime image host.
+function resolveThumbnail(raw: string | null | undefined): string | undefined {
+  if (!raw) return undefined;
+  if (raw.startsWith('http')) return raw;
+  return `${ALLANIME_IMG_HOST}/${raw.replace(/^\//, '')}`;
+}
 
 export async function searchAnime(
   query: string,
@@ -28,6 +36,7 @@ export async function searchAnime(
     .map(e => ({
       id: e._id,
       name: e.name,
+      thumbnail: resolveThumbnail(e.thumbnail),
       availableEpisodes: e.availableEpisodes,
     }));
 }

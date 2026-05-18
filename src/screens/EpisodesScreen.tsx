@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -11,6 +11,8 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { listEpisodes, type EpisodeInfo } from '../scraper';
 import type { RootStackParamList } from '../navigation';
+import { Button } from '../components';
+import { colors, radii, spacing, typography } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Episodes'>;
 
@@ -20,24 +22,28 @@ export function EpisodesScreen({ route, navigation }: Props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const list = await listEpisodes(showId, 'sub');
+      setEpisodes(list);
+    } catch (e: any) {
+      setError(e?.message ?? 'Failed to load episodes');
+    } finally {
+      setLoading(false);
+    }
+  }, [showId]);
+
   useEffect(() => {
     navigation.setOptions({ title });
-    (async () => {
-      try {
-        const list = await listEpisodes(showId, 'sub');
-        setEpisodes(list);
-      } catch (e: any) {
-        setError(e?.message ?? 'Failed to load episodes');
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [showId, title, navigation]);
+    load();
+  }, [title, navigation, load]);
 
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator />
+        <ActivityIndicator color={colors.primaryContainer} />
       </View>
     );
   }
@@ -45,6 +51,7 @@ export function EpisodesScreen({ route, navigation }: Props) {
     return (
       <View style={styles.center}>
         <Text style={styles.error}>{error}</Text>
+        <Button title="Retry" onPress={load} style={styles.retry} />
       </View>
     );
   }
@@ -52,12 +59,13 @@ export function EpisodesScreen({ route, navigation }: Props) {
   return (
     <FlatList
       style={styles.container}
+      contentContainerStyle={styles.list}
       data={episodes}
       numColumns={4}
       keyExtractor={item => item.episodeString}
       renderItem={({ item }) => (
         <Pressable
-          style={styles.cell}
+          style={({ pressed }) => [styles.cell, pressed && styles.cellPressed]}
           onPress={() =>
             navigation.navigate('Player', {
               showId,
@@ -73,21 +81,38 @@ export function EpisodesScreen({ route, navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#0e0e10' },
+  container: { flex: 1, backgroundColor: colors.background },
+  list: { padding: spacing.base },
   center: {
     flex: 1,
-    backgroundColor: '#0e0e10',
+    backgroundColor: colors.background,
     alignItems: 'center',
     justifyContent: 'center',
+    padding: spacing.gutter,
   },
   cell: {
     flex: 1,
-    margin: 6,
+    margin: spacing.stackSm + 2,
     paddingVertical: 18,
-    backgroundColor: '#1c1c20',
-    borderRadius: 8,
+    backgroundColor: colors.surfaceContainer,
+    borderRadius: radii.base,
+    borderWidth: 1,
+    borderColor: colors.outlineVariant,
     alignItems: 'center',
   },
-  cellText: { color: '#fff', fontSize: 16, fontWeight: '600' },
-  error: { color: '#f55', textAlign: 'center', padding: 16 },
+  cellPressed: {
+    backgroundColor: colors.surfaceContainerHigh,
+    borderColor: colors.primaryContainer,
+  },
+  cellText: {
+    ...typography.bodyMd,
+    fontWeight: '600',
+    color: colors.onSurface,
+  },
+  error: {
+    color: colors.error,
+    ...typography.bodyMd,
+    textAlign: 'center',
+  },
+  retry: { marginTop: spacing.stackMd },
 });

@@ -5,7 +5,12 @@ export const USER_AGENT =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0';
 
 export const SEARCH_GQL =
-  'query( $search: SearchInput $limit: Int $page: Int $translationType: VaildTranslationTypeEnumType $countryOrigin: VaildCountryOriginEnumType ) { shows( search: $search limit: $limit page: $page translationType: $translationType countryOrigin: $countryOrigin ) { edges { _id name availableEpisodes __typename } }}';
+  'query( $search: SearchInput $limit: Int $page: Int $translationType: VaildTranslationTypeEnumType $countryOrigin: VaildCountryOriginEnumType ) { shows( search: $search limit: $limit page: $page translationType: $translationType countryOrigin: $countryOrigin ) { edges { _id name thumbnail availableEpisodes __typename } }}';
+
+// Allanime thumbnails come back either as full URLs or as bare filenames served
+// from this image host.
+export const ALLANIME_IMG_HOST =
+  'https://wp.youtube-anime.com/aln.youtube-anime.com';
 
 export const EPISODES_LIST_GQL =
   'query ($showId: String!) { show( _id: $showId ) { _id availableEpisodesDetail }}';
