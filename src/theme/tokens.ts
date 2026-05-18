@@ -65,43 +65,43 @@ export const spacing = {
   stackLg: 24,
 } as const;
 
-// fontFamily values require the Montserrat/Inter font files to be bundled and linked.
-// Until then RN falls back to the system font — sizes/weights still apply.
+// fontFamily values use each static font's PostScript name, which also matches
+// the bundled filename — so the same string resolves on both iOS and Android.
 export const typography = {
   displayLg: {
-    fontFamily: 'Montserrat',
+    fontFamily: 'Montserrat-ExtraBold',
     fontSize: 48,
     fontWeight: '800',
     lineHeight: 56,
     letterSpacing: -1,
   },
   displayLgMobile: {
-    fontFamily: 'Montserrat',
+    fontFamily: 'Montserrat-ExtraBold',
     fontSize: 32,
     fontWeight: '800',
     lineHeight: 38,
     letterSpacing: -0.64,
   },
   headlineMd: {
-    fontFamily: 'Montserrat',
+    fontFamily: 'Montserrat-Bold',
     fontSize: 24,
     fontWeight: '700',
     lineHeight: 32,
   },
   bodyLg: {
-    fontFamily: 'Inter',
+    fontFamily: 'Inter18pt-Regular',
     fontSize: 18,
     fontWeight: '400',
     lineHeight: 28,
   },
   bodyMd: {
-    fontFamily: 'Inter',
+    fontFamily: 'Inter18pt-Regular',
     fontSize: 16,
     fontWeight: '400',
     lineHeight: 24,
   },
   labelSm: {
-    fontFamily: 'Inter',
+    fontFamily: 'Inter18pt-SemiBold',
     fontSize: 12,
     fontWeight: '600',
     lineHeight: 16,

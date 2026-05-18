@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AniApp · allanime API Reference</title>
+  <style>
+    :root {
+      --bg: #0e0e10;
+      --panel: #17171c;
+      --border: #26262d;
+      --text: #e8e8ee;
+      --muted: #8a8a96;
+      --done: #4ade80;
+      --pending: #f59e0b;
+      --later: #6b7280;
+      --accent: #a78bfa;
+      --code: #fca5a5;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .wrap { max-width: 920px; margin: 0 auto; padding: 48px 24px 80px; }
+    h1 { font-size: 32px; margin: 0 0 4px; }
+    h2 { font-size: 20px; margin: 40px 0 4px; }
+    .sub { color: var(--muted); margin: 0 0 12px; }
+    .legend { display: flex; flex-wrap: wrap; gap: 16px; margin: 24px 0; font-size: 13px; color: var(--muted); }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .dot.done { background: var(--done); }
+    .dot.pending { background: var(--pending); }
+    .dot.later { background: var(--later); }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin: 14px 0;
+    }
+    code, .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 13px;
+    }
+    code { color: var(--code); }
+    pre {
+      background: #0a0a0c;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      overflow-x: auto;
+      font-size: 12.5px;
+      color: var(--text);
+    }
+    table { width: 100%; border-collapse: collapse; margin: 8px 0; }
+    th, td {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      font-size: 13.5px;
+    }
+    th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    td.q { white-space: nowrap; }
+    .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 7px;
+      border-radius: 6px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .tag.used { background: rgba(74,222,128,0.15); color: var(--done); }
+    .tag.auth { background: rgba(245,158,11,0.15); color: var(--pending); }
+    .muted { color: var(--muted); }
+    .note {
+      border-left: 3px solid var(--pending);
+      padding: 10px 14px;
+      background: rgba(245,158,11,0.06);
+      border-radius: 0 8px 8px 0;
+      margin: 14px 0;
+      font-size: 13.5px;
+    }
+    ul { margin: 6px 0; padding-left: 20px; }
+    li { margin: 3px 0; }
+    .updated { color: var(--later); font-size: 12px; margin-top: 40px; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>allanime API Reference</h1>
+  <p class="sub">GraphQL schema notes for AniApp · captured via introspection</p>
+
+  <div class="legend">
+    <span><span class="dot done"></span> Used by the app today</span>
+    <span><span class="dot pending"></span> Needs an allanime account (auth)</span>
+    <span><span class="dot later"></span> Not relevant to anime watching</span>
+  </div>
+
+  <h2>Endpoint</h2>
+  <div class="panel">
+    <p style="margin:0 0 8px;">Single GraphQL endpoint, <code>POST</code> with a JSON body of <code>{ query, variables }</code>.</p>
+    <pre>POST https://api.allanime.day/api
+
+Headers:
+  Content-Type: application/json
+  User-Agent:   Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/121.0
+  Referer:      https://allmanga.to
+  Origin:       https://allmanga.to</pre>
+    <p class="muted" style="margin:8px 0 0;font-size:13px;">Introspection is open — the full schema can be re-queried any time with
+    <code>{ __schema { queryType { fields { name } } } }</code>.</p>
+  </div>
+
+  <h2>Anime — ready to use (no auth)</h2>
+  <table>
+    <thead><tr><th>Query</th><th>Returns</th><th>Args</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="q"><code>shows</code><span class="tag used">used</span></td>
+        <td class="mono">ShowsConnection</td>
+        <td class="mono">search, page, offset, limit, translationType, countryOrigin, queryAt</td>
+        <td>Search. Currently powers <code>searchAnime()</code>.</td>
+      </tr>
+      <tr>
+        <td class="q"><code>show</code><span class="tag used">used</span></td>
+        <td class="mono">Show</td>
+        <td class="mono">_id, queryAt, search</td>
+        <td>Single show. App only reads <code>availableEpisodesDetail</code> — far more is available (see Show type below).</td>
+      </tr>
+      <tr>
+        <td class="q"><code>episode</code><span class="tag used">used</span></td>
+        <td class="mono">Episode</td>
+        <td class="mono">showId, episodeString, translationType, queryAt, search</td>
+        <td>Stream sources. Powers <code>getPlayableLinks()</code>. Needs the persisted-query hash to skip the captcha gate.</td>
+      </tr>
+      <tr>
+        <td class="q"><code>fastSearch</code></td>
+        <td class="mono">SearchResult</td>
+        <td class="mono">search</td>
+        <td>Lighter search variant — good for typeahead.</td>
+      </tr>
+      <tr>
+        <td class="q"><code>showsWithIds</code></td>
+        <td class="mono">Show</td>
+        <td class="mono">ids, search</td>
+        <td>Batch-fetch shows by a list of IDs. Best fit for hydrating a local watchlist (store IDs, fetch fresh metadata).</td>
+      </tr>
+      <tr>
+        <td class="q"><code>episodes</code></td>
+        <td class="mono">EpisodesConnection</td>
+        <td class="mono">showId, translationType, episodeNumStart, episodeNumEnd, search</td>
+        <td>Episode listing with a numeric range.</td>
+      </tr>
+      <tr>
+        <td class="q"><code>episodeInfos</code></td>
+        <td class="mono">EpisodeInfo</td>
+        <td class="mono">showId, episodeNumStart, episodeNumEnd, queryAt</td>
+        <td>Per-episode metadata: thumbnails, description, notes, upload dates.</td>
+      </tr>
+      <tr>
+        <td class="q"><code>queryPopular</code></td>
+        <td class="mono">RecommendationsResponse</td>
+        <td class="mono">type, size, dateRange, isAdult, page, allowAdult, allowUnknown, denyEcchi</td>
+        <td>Trending shows — a home/discover screen.</td>
+      </tr>
+      <tr>
+        <td class="q"><code>queryLatestPageStatus</code></td>
+        <td class="mono">RecommendationsResponse</td>
+        <td class="mono">pageSearch</td>
+        <td>Recently-updated episodes feed.</td>
+      </tr>
+      <tr>
+        <td class="q"><code>queryRecommendation</code></td>
+        <td class="mono">RecommendationsResponse</td>
+        <td class="mono">pageSearch</td>
+        <td>Recommendations.</td>
+      </tr>
+      <tr>
+        <td class="q"><code>queryRandomRecommendation</code></td>
+        <td class="mono">AnyCard</td>
+        <td class="mono">format, allowAdult, translationType, denyEcchi</td>
+        <td>One random show — a "Surprise me" button.</td>
+      </tr>
+      <tr>
+        <td class="q"><code>queryTags</code></td>
+        <td class="mono">TagsConnection</td>
+        <td class="mono">search, page, offset, limit</td>
+        <td>Genre/tag list.</td>
+      </tr>
+      <tr>
+        <td class="q"><code>queryListForTag</code></td>
+        <td class="mono">TagListRecommendationsResponse</td>
+        <td class="mono">search</td>
+        <td>Browse shows within a tag/genre.</td>
+      </tr>
+      <tr>
+        <td class="q"><code>sameVoiceActorShows</code></td>
+        <td class="mono">ShowsConnection</td>
+        <td class="mono">staffAniListId, animeId, pageNo, limit, offset, allowAdult, allowUnknown, denyEcchi</td>
+        <td>Shows sharing a voice actor.</td>
+      </tr>
+      <tr>
+        <td class="q"><code>characters</code></td>
+        <td class="mono">CharactersResponse</td>
+        <td class="mono">search, page, offset, allowAdult, allowUnknown, denyEcchi, limit</td>
+        <td>Character info.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Key return-type fields</h2>
+  <div class="panel">
+    <p style="margin:0 0 4px;"><strong>Show</strong> <span class="muted">— far richer than the app currently requests</span></p>
+    <pre>sortOrder, _id, isAdult, hidden, name, englishName, nativeName, nameOnlyString,
+countryOfOrigin, malId, aniListId, status, altNames, trustedAltNames, description,
+prevideos, thumbnail, banner, thumbnails, musics, score, type, averageScore, genres,
+tags, popularity, airedStart, airedEnd, season, rating, broadcastInterval, relatedShows,
+relatedMangas, characters, pageStatus, slugTime, characterCount, episodeCount,
+episodeDuration, studios, nextAiringEpisode, lastEpisodeDate, lastEpisodeTimestamp,
+lastEpisodeInfo, availableEpisodes, availableEpisodesDetail, disqusIds</pre>
+    <p style="margin:14px 0 4px;"><strong>EpisodeInfo</strong></p>
+    <pre>_id, notes, description, pictureUrlsProcessed, isManga, thumbnails, uploadDates,
+showId, episodeIdNum, vidInforssub, vidInforsdub, vidInforsraw</pre>
+    <p style="margin:14px 0 4px;"><strong>RecommendationsResponse</strong> <span class="muted">— wrapper for queryPopular / queryLatest / queryRecommendation</span></p>
+    <pre>total, recommendations</pre>
+  </div>
+
+  <h2>Needs an allanime account <span class="tag auth">auth</span></h2>
+  <div class="panel">
+    <p class="muted" style="margin:0 0 8px;font-size:13px;">Require a logged-in allanime user — skipped, since the app keeps watch state locally in AsyncStorage.</p>
+    <p class="mono" style="margin:0;">getUser, user, users, twoFactorSecret, watchState, watchingList, querySyncState,
+    myPlaylists, playlists, userPlaylists, relatedPlaylistsWithPlayId, playlistWithId,
+    myFriends, mutualFriends, messages, queryComments, queryCommentLikes, queryReviews,
+    queryUserReviews, queryUserComments, queryUserActivities, myTierLists, tierLists,
+    tierListWithId, moderationReports, moderationReport, testFcm</p>
+  </div>
+
+  <h2>Other content on the same backend <span class="dot later" style="vertical-align:middle;"></span></h2>
+  <div class="panel">
+    <p style="margin:0 0 6px;"><strong>Manga</strong> <span class="muted">— not anime, but available if ever wanted</span></p>
+    <p class="mono" style="margin:0 0 12px;">mangas, manga, mangasWithIds, mangasWithPlaylistId, chaptersForRead, chapterPages, chapter</p>
+    <p style="margin:0 0 6px;"><strong>Music</strong></p>
+    <p class="mono" style="margin:0 0 12px;">musics, music, musicsWithPlaylistId, queryPopularMusic, queryMusicRecommendation</p>
+    <p style="margin:0 0 6px;"><strong>Misc</strong></p>
+    <p class="mono" style="margin:0;">stuffs, showsWithPlaylistId, queryPageStatusForShowManga, queryPageForIndependentDoc,
+    appsAccessbility, appParams, allEmojis, getEmoji, charactersWithAnilistId</p>
+  </div>
+
+  <div class="note">
+    <strong>Caveat — introspection ≠ guaranteed working.</strong>
+    A query appearing in the schema does not mean it returns data with plain headers.
+    <code>shows</code> / <code>show</code> work with just the Referer headers; <code>episode</code>
+    needed the persisted-query SHA-256 hash to dodge a captcha gate. Verify
+    <code>queryPopular</code>, <code>episodeInfos</code>, and <code>showsWithIds</code> with a live
+    request before building on them.
+  </div>
+
+  <p class="updated">Captured 2026-05-18 · re-run introspection if the schema looks stale.</p>
+</div>
+</body>
+</html>

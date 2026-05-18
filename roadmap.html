@@ -56,6 +56,7 @@
       letter-spacing: 0.5px;
       padding: 4px 10px;
       border-radius: 999px;
+      white-space: nowrap;
     }
     .badge.done { background: rgba(74, 222, 128, 0.15); color: var(--done); }
     .badge.pending { background: rgba(245, 158, 11, 0.15); color: var(--pending); }
@@ -86,7 +87,17 @@
       text-align: center;
       line-height: 16px;
     }
+    ul.tasks li.partial::before {
+      background: var(--pending);
+      content: "~";
+      color: #3a2606;
+      font-size: 13px;
+      font-weight: 800;
+      text-align: center;
+      line-height: 14px;
+    }
     ul.tasks li.done { color: var(--text); }
+    ul.tasks li.partial { color: var(--text); }
     ul.tasks li.todo { color: var(--muted); }
 
     footer { margin-top: 32px; color: var(--muted); font-size: 12px; }
@@ -106,7 +117,7 @@
 
     <section class="milestone">
       <header>
-        <h2>v1 · Search & Play</h2>
+        <h2>v1 · Search &amp; Play</h2>
         <span class="badge done">Done</span>
       </header>
       <p class="note">Minimum viable loop: find a show, pick an episode, watch it.</p>
@@ -115,18 +126,52 @@
         <li class="done">Hex-pair URL decoder for provider source IDs</li>
         <li class="done">Provider resolution + <code>/clock.json</code> link extraction</li>
         <li class="done">React Navigation native stack: Search → Episodes → Player</li>
-        <li class="done">HLS playback via <code>react-native-video</code> with Referer header</li>
+        <li class="done">Video playback with Referer header — migrated to <code>react-native-vlc-media-player</code> after AVFoundation codec failures (HEVC 10-bit)</li>
       </ul>
     </section>
 
     <section class="milestone">
       <header>
-        <h2>v2 · Sub/Dub + Quality picker</h2>
+        <h2>v2 · App shell &amp; design system</h2>
+        <span class="badge done">Done</span>
+      </header>
+      <p class="note">Off the original roadmap — grew the one-screen MVP into a real app.</p>
+      <ul class="tasks">
+        <li class="done">"Cinematic Pulse" design tokens — colors, typography, spacing, radii (<code>src/theme</code>)</li>
+        <li class="done">Reusable components: AnimeCard, Button, GenreChip, ProgressBar, ContinueCard, Icon</li>
+        <li class="done">Inter + Montserrat static fonts linked; IcoMoon icon font via one <code>&lt;Icon&gt;</code></li>
+        <li class="done">Custom iOS app icon</li>
+        <li class="done">Bottom-tab navigation: Home / Search / Library</li>
+        <li class="done">Home screen: Hero, Trending grid, Recently Updated carousel</li>
+        <li class="done">Discovery API: <code>queryPopular</code> + <code>queryLatestPageStatus</code></li>
+        <li class="done">Anime info screen — banner, synopsis, genres, rating above the episode grid</li>
+        <li class="done">VLC custom controls: skip ±5s, pause, draggable seek bar, source switcher</li>
+      </ul>
+    </section>
+
+    <section class="milestone">
+      <header>
+        <h2>v3 · Watch history &amp; Library</h2>
+        <span class="badge done">Done</span>
+      </header>
+      <p class="note">Local-only tracking — no accounts, no backend. <code>AsyncStorage</code> only.</p>
+      <ul class="tasks">
+        <li class="done">Storage layer for history + watchlist (<code>src/storage</code>)</li>
+        <li class="done">Persist <code>{showId, episodeString, positionMs, durationMs, updatedAt}</code> per show</li>
+        <li class="done">"Continue Watching" carousel on Home; resumes from saved position</li>
+        <li class="partial">Finished episodes auto-drop at 95% — no explicit "watched" flag yet</li>
+        <li class="done">Save-to-Library toggle (hero + info screen) → Library tab</li>
+      </ul>
+    </section>
+
+    <section class="milestone">
+      <header>
+        <h2>v4 · Sub/Dub + Quality picker</h2>
         <span class="badge pending">Next up</span>
       </header>
       <p class="note">Surface ani-cli's existing knobs: pick translation, pick resolution.</p>
       <ul class="tasks">
-        <li class="todo">Sub/Dub toggle on Search and Episodes screens (state lifted to a small store)</li>
+        <li class="todo">Sub/Dub toggle (currently hardcoded <code>'sub'</code>) — state lifted to a small store</li>
         <li class="todo">Parse wixmp multi-resolution URL pattern (<code>,1080p,720p,…,/mp4/</code>) into discrete qualities</li>
         <li class="todo">Resolve master m3u8 → variant playlists; expose quality list to the player UI</li>
         <li class="todo">Quality picker overlay in Player (Best / 1080 / 720 / 480 / Worst)</li>
@@ -136,21 +181,20 @@
 
     <section class="milestone">
       <header>
-        <h2>v3 · Continue watching & history</h2>
+        <h2>v5 · Playback polish &amp; Settings</h2>
         <span class="badge later">Later</span>
       </header>
-      <p class="note">Local-only tracking — no accounts, no backend.</p>
+      <p class="note">Loose ends from v3 plus the bits that make daily use smoother.</p>
       <ul class="tasks">
-        <li class="todo">Persist <code>{showId, episodeString, positionMs, durationMs, watchedAt}</code> per show</li>
-        <li class="todo">"Continue Watching" carousel on the Search screen</li>
-        <li class="todo">Resume playback from saved position; auto-mark watched at 90%</li>
         <li class="todo">"Next Episode" affordance at end of current episode</li>
-        <li class="todo">Clear-history action in a small Settings screen</li>
+        <li class="todo">Explicit "watched" state + auto-advance on completion</li>
+        <li class="todo">Settings screen: clear watch history, clear watchlist</li>
+        <li class="todo">Theme the Player screen to the design system (still on the old blue accent)</li>
       </ul>
     </section>
 
     <footer>
-      Status as of 2026-05-13. Personal use only — allanime sources are unlicensed; this won't ship to the App Store.
+      Status as of 2026-05-18. Personal use only — allanime sources are unlicensed; this won't ship to the App Store.
     </footer>
   </div>
 </body>
