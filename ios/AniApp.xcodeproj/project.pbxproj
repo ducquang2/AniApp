@@ -12,6 +12,8 @@
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		B801EC40D650DE5ABA86BDC8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
+		1B134854B70843E8A1E6F9AF /* InterVariable-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E8A3590E6801460383405BDB /* InterVariable-Italic.ttf */; };
+		0B86675A5D9D4B24BF37C005 /* InterVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4B0A7F2D73DE4D4D85AEF5B5 /* InterVariable.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +27,8 @@
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = AniApp/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = AniApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		E8A3590E6801460383405BDB /* InterVariable-Italic.ttf */ = {isa = PBXFileReference; name = "InterVariable-Italic.ttf"; path = "../src/assets/fonts/InterVariable-Italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		4B0A7F2D73DE4D4D85AEF5B5 /* InterVariable.ttf */ = {isa = PBXFileReference; name = "InterVariable.ttf"; path = "../src/assets/fonts/InterVariable.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +79,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				4CBF5E710CB647479DA560D0 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -97,6 +102,16 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		4CBF5E710CB647479DA560D0 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				E8A3590E6801460383405BDB /* InterVariable-Italic.ttf */,
+				4B0A7F2D73DE4D4D85AEF5B5 /* InterVariable.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -161,6 +176,8 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				B801EC40D650DE5ABA86BDC8 /* PrivacyInfo.xcprivacy in Resources */,
+				1B134854B70843E8A1E6F9AF /* InterVariable-Italic.ttf in Resources */,
+				0B86675A5D9D4B24BF37C005 /* InterVariable.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
